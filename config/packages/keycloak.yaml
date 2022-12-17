@@ -1,0 +1,4 @@
+parameters:
+    keycloak_realm: '%env(resolve:KEYCLOAK_REALM)%'
+    keycloak_url: '%env(resolve:KEYCLOAK_URL)%'
+    keycloak_client_id: '%env(resolve:SSO_CLIENT_ID)%'
