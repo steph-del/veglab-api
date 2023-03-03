@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
         "firebase/php-jwt": "^6.3",
+        "friendsofsymfony/elastica-bundle": "^6.2",
         "guzzlehttp/guzzle": "^7.4",
         "nelmio/cors-bundle": "^2.2",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -31,7 +32,8 @@
         "symfony/serializer": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
         "symfony/validator": "6.1.*",
-        "symfony/yaml": "6.1.*"
+        "symfony/yaml": "6.1.*",
+        "vich/uploader-bundle": "^2.0"
     },
     "require-dev": {
         "api-platform/schema-generator": "^5.0",
