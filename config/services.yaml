@@ -22,3 +22,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Occurrence resource type.
+    app.search.occurrence_to_elastica_transformer :
+        class: App\Elastica\Transformer\OccurrenceToElasticaTransformer
+
+    # Table resource type.
+    app.search.table_to_elastica_transformer :
+        class: App\Elastica\Transformer\TableToElasticaTransformer
