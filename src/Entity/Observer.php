@@ -7,6 +7,7 @@ use App\Repository\ObserverRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ObserverRepository::class)]
 #[ApiResource]
@@ -15,12 +16,15 @@ class Observer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::create'])]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: Occurrence::class, inversedBy: 'vlObservers')]
+    // @TODO check cascade props
+    #[ORM\ManyToMany(targetEntity: Occurrence::class, inversedBy: 'vlObservers', cascade: ['persist', 'remove'])]
     private Collection $occurrences;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::create'])]
     private ?string $name = null;
 
     public function __construct()

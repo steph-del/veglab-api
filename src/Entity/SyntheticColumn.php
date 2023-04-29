@@ -7,6 +7,8 @@ use App\Repository\SyntheticColumnRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: SyntheticColumnRepository::class)]
 #[ApiResource]
@@ -15,15 +17,19 @@ class SyntheticColumn
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumns')]
+    #[Groups(['table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: ExtendedFieldOccurrence::class)]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: OccurrenceValidation::class)]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $validations;
 
     #[ORM\OneToOne(mappedBy: 'syntheticColumn', cascade: ['persist', 'remove'])]
@@ -34,14 +40,15 @@ class SyntheticColumn
     #[Groups(['table::read', 'table::create'])]
     private ?User $owner = null;
 
-    #[ORM\OneToOne(inversedBy: 'syntheticColumn', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Table $_table = null;
+    #[ORM\OneToOne(mappedBy: 'syntheticColumn')]
+    private ?Table $table = null;
 
-    #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: SyntheticItem::class)]
+    #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: SyntheticItem::class, cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $items;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $vlWorkspace = null;
 
     public function __construct()
@@ -164,12 +171,12 @@ class SyntheticColumn
 
     public function getTable(): ?Table
     {
-        return $this->_table;
+        return $this->table;
     }
 
-    public function setTable(Table $_table): self
+    public function setTable(Table $table): self
     {
-        $this->_table = $_table;
+        $this->table = $table;
 
         return $this;
     }

@@ -6,6 +6,8 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\OccurrenceValidationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: OccurrenceValidationRepository::class)]
 #[ApiResource]
@@ -14,48 +16,62 @@ class OccurrenceValidation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'validations')]
+    #[Groups(['occurrence::create'])]
     private ?Occurrence $occurrence = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $validatedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $validatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $updatedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'validation')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $_user = null;
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?User $owner = null;
 
+    // @TODO To delete ?
     #[ORM\ManyToOne(inversedBy: 'userValidation')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?User $userValidation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $repository = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $repositoryIdNomen = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $repositoryIdTaxo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $inputName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $validatedName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $validName = null;
 
     #[ORM\ManyToOne(inversedBy: 'validations')]

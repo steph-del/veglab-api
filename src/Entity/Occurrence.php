@@ -2,148 +2,192 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use App\Repository\OccurrenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: OccurrenceRepository::class)]
 #[ApiResource]
+#[Get]
+#[Post(denormalizationContext: ['groups' => ['occurrence::create']])]
 class Occurrence
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $userId = null;
-
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $level = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     // https://api-platform.com/docs/core/serialization/#force-iri-with-relations-of-the-same-type-parentchilds-relations
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private Collection $children;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $parentLevel = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $layer = null;
 
     #[ORM\ManyToMany(targetEntity: Observer::class, mappedBy: 'occurrences', cascade: ["persist"])]
     #[ORM\JoinTable(name: "vl_occurrence__observer")]
     #[ORM\JoinColumn(name: "vl_observer_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private Collection $vlObservers;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $vlWorkspace = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $dateObserved = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $dateObservedPrecision = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $dateCreated = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    // @TODO nullable ?
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $dateUpdated = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $datePublished = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create','occurrence::create'])]
     private ?string $certainty = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $annotation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $occurrenceType = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $coef = null;
 
     #[ORM\ManyToOne(inversedBy: 'occurrences')]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?bool $isPublic = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $signature = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $geometry = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $centroid = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $elevation = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?bool $isElevationEstimated = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $geodatum = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $locality = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $localityInseeCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $publishedLocation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $vlLocationAccuracy = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmCounty = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmState = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmPostCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmCountry = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmCountryCode = null;
 
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $osmId = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $osmPlaceId = null;
 
-    #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: OccurrenceValidation::class)]
+    #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: OccurrenceValidation::class, cascade: ["persist"])]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private Collection $validations;
 
     #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: ExtendedFieldOccurrence::class)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\ManyToMany(targetEntity: Sye::class, inversedBy: 'occurrences')]
     private Collection $syes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[SerializedName("userId")]
+    private ?string $userId = null;
+
     #[ORM\ManyToOne(inversedBy: 'occurrences')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $_user = null;
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?User $owner = null;
 
     public function __construct()
@@ -390,7 +434,7 @@ class Occurrence
         return $this->coef;
     }
 
-    public function setCoef(string $coef): self
+    public function setCoef(?string $coef): self
     {
         $this->coef = $coef;
 
@@ -510,7 +554,7 @@ class Occurrence
         return $this->localityInseeCode;
     }
 
-    public function setLocalityInseeCode(string $localityInseeCode): self
+    public function setLocalityInseeCode(?string $localityInseeCode): self
     {
         $this->localityInseeCode = $localityInseeCode;
 

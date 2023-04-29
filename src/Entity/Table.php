@@ -3,38 +3,52 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: TableRepository::class)]
 #[ORM\Table(name: '`table`')]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['table::read']],
+)]
+#[Post(denormalizationContext: ['groups' => ['table::create']])]
 class Table
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: '_table', targetEntity: TableRowDefinition::class)]
+    #[ORM\OneToMany(mappedBy: '_table', targetEntity: TableRowDefinition::class, cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $rowsDefinition;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
+    #[Groups(['table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
-    #[ORM\OneToMany(mappedBy: '_table', targetEntity: OccurrenceValidation::class)]
+    #[ORM\OneToMany(mappedBy: '_table', targetEntity: OccurrenceValidation::class, cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $validations;
 
     #[ORM\OneToOne(mappedBy: '_table', cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private ?PdfFile $pdf = null;
 
-    #[ORM\OneToMany(mappedBy: '_table', targetEntity: Sye::class)]
+    #[ORM\OneToMany(mappedBy: '_table', targetEntity: Sye::class, cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $sye;
 
-    #[ORM\OneToOne(mappedBy: '_table', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'table', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['table::read', 'table::create'])]
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
@@ -43,30 +57,39 @@ class Table
     private ?User $owner = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?bool $isDiagnosis = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $createdBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $updatedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 1024, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $syeOrder = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 300, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $vlWorkspace = null;
 
     public function __construct()
@@ -212,12 +235,12 @@ class Table
 
     public function setSyntheticColumn(SyntheticColumn $syntheticColumn): self
     {
+        $this->syntheticColumn = $syntheticColumn;
+
         // set the owning side of the relation if necessary
         if ($syntheticColumn->getTable() !== $this) {
             $syntheticColumn->setTable($this);
         }
-
-        $this->syntheticColumn = $syntheticColumn;
 
         return $this;
     }
@@ -234,7 +257,7 @@ class Table
         return $this;
     }
 
-    public function isIsDiagnosis(): ?bool
+    public function getIsDiagnosis(): ?bool
     {
         return $this->isDiagnosis;
     }

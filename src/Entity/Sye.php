@@ -16,21 +16,28 @@ class Sye
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'syes')]
+    #[Groups(['table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\OneToMany(mappedBy: 'sye', targetEntity: ExtendedFieldOccurrence::class)]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\ManyToMany(targetEntity: Occurrence::class, mappedBy: 'syes')]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $occurrences;
 
     #[ORM\OneToMany(mappedBy: 'sye', targetEntity: OccurrenceValidation::class)]
+    #[Groups(['table::read', 'table::create'])]
     private Collection $validations;
 
+    // @TODO what is this ?
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $syeId = null;
 
     #[ORM\ManyToOne(inversedBy: 'sye')]
@@ -39,21 +46,27 @@ class Sye
     private ?User $owner = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $occurrenceCount = null;
 
     #[ORM\Column(length: 1024, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $occurrencesOrder = null;
 
     #[ORM\OneToOne(inversedBy: 'sye', cascade: ['persist', 'remove'])]
+    #[Groups(['table::read', 'table::create'])]
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?bool $syntheticSye = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?bool $onlyShowSyntheticColumn = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $vlWorkspace = null;
 
     #[ORM\ManyToOne(inversedBy: 'sye')]

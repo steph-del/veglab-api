@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\SyntheticItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SyntheticItemRepository::class)]
 #[ApiResource]
@@ -13,6 +14,7 @@ class SyntheticItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
@@ -20,36 +22,48 @@ class SyntheticItem
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $layer = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $repository = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $repositoryIdNomen = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $repositoryIdTaxo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $displayName = null;
 
-    #[ORM\Column]
+    // @TODO nullable ?
+    #[ORM\Column(nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?int $occurrenceCount = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?bool $isOccurrenceCountEstimated = null;
 
     #[ORM\Column]
+    #[Groups(['table::read', 'table::create'])]
     private ?float $frequency = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $coef = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $minCoef = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Groups(['table::read', 'table::create'])]
     private ?string $maxCoef = null;
 
     public function getId(): ?int

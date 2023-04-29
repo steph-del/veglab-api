@@ -3,22 +3,28 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidType;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[ApiResource]
+#[ORM\Table(name: 'vl_user')]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+)]
 class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
+    #[Groups(['read', 'table::create', 'occurrence::create'])]
     private string $id;
 
+    // @TODO Remove
     private string $ssoId;
 
     private array $roles;
@@ -298,6 +304,31 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return '---';
+    }
+
+    public function getLastName(): string
+    {
+        return '---';
+    }
+
+    public function getUsername(): string
+    {
+        return '---';
+    }
+
+    public function getEmail(): string
+    {
+        return '---';
+    }
+
+    public function getUserPseudo(): string
+    {
+        return '---';
     }
 
 }
