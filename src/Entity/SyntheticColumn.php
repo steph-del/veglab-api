@@ -31,7 +31,8 @@ class SyntheticColumn
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumn')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $_user = null;
+    #[Groups(['table::read', 'table::create'])]
+    private ?User $owner = null;
 
     #[ORM\OneToOne(inversedBy: 'syntheticColumn', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -149,14 +150,14 @@ class SyntheticColumn
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
-        return $this->_user;
+        return $this->owner;
     }
 
-    public function setUser(?User $_user): self
+    public function setOwner(?User $owner): self
     {
-        $this->_user = $_user;
+        $this->owner = $owner;
 
         return $this;
     }

@@ -34,6 +34,7 @@ class OccurrenceValidation
     #[ORM\ManyToOne(inversedBy: 'validation')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $_user = null;
+    private ?User $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'userValidation')]
     #[ORM\JoinColumn(nullable: false)]
@@ -131,14 +132,14 @@ class OccurrenceValidation
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
-        return $this->_user;
+        return $this->owner;
     }
 
-    public function setUser(?User $_user): self
+    public function setOwner(?User $owner): self
     {
-        $this->_user = $_user;
+        $this->owner = $owner;
 
         return $this;
     }

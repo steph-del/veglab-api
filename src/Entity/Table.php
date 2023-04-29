@@ -39,7 +39,8 @@ class Table
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $_user = null;
+    #[Groups(['table::read', 'table::create'])]
+    private ?User $owner = null;
 
     #[ORM\Column]
     private ?bool $isDiagnosis = null;
@@ -221,14 +222,14 @@ class Table
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
-        return $this->_user;
+        return $this->owner;
     }
 
-    public function setUser(?User $_user): self
+    public function setOwner(?User $owner): self
     {
-        $this->_user = $_user;
+        $this->owner = $owner;
 
         return $this;
     }

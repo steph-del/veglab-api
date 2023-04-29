@@ -7,7 +7,7 @@ use App\Repository\SyeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SyeRepository::class)]
 #[ApiResource]
@@ -35,8 +35,8 @@ class Sye
 
     #[ORM\ManyToOne(inversedBy: 'sye')]
     #[ORM\JoinColumn(nullable: false)]
-    #[SerializedName("user")]
-    private ?User $_user = null;
+    #[Groups(['table::read', 'table::create'])]
+    private ?User $owner = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $occurrenceCount = null;
@@ -182,14 +182,14 @@ class Sye
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
-        return $this->_user;
+        return $this->owner;
     }
 
-    public function setUser(?User $_user): self
+    public function setOwner(?User $owner): self
     {
-        $this->_user = $_user;
+        $this->owner = $owner;
 
         return $this;
     }

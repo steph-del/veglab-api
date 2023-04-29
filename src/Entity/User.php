@@ -23,22 +23,22 @@ class User implements UserInterface
 
     private array $roles;
 
-    #[ORM\OneToMany(mappedBy: '_user', targetEntity: OccurrenceValidation::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: OccurrenceValidation::class)]
     private Collection $validation;
 
     #[ORM\OneToMany(mappedBy: 'userValidation', targetEntity: OccurrenceValidation::class)]
     private Collection $userValidation;
 
-    #[ORM\OneToMany(mappedBy: '_user', targetEntity: Sye::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Sye::class)]
     private Collection $sye;
 
-    #[ORM\OneToMany(mappedBy: '_user', targetEntity: SyntheticColumn::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: SyntheticColumn::class)]
     private Collection $syntheticColumn;
 
-    #[ORM\OneToMany(mappedBy: '_user', targetEntity: Table::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Table::class)]
     private Collection $tables;
 
-    #[ORM\OneToMany(mappedBy: '_user', targetEntity: Occurrence::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Occurrence::class)]
     private Collection $occurrences;
 
     /**
@@ -132,7 +132,7 @@ class User implements UserInterface
     {
         if (!$this->validation->contains($validation)) {
             $this->validation->add($validation);
-            $validation->setUser($this);
+            $validation->setOwner($this);
         }
 
         return $this;
@@ -142,8 +142,8 @@ class User implements UserInterface
     {
         if ($this->validation->removeElement($validation)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getUser() === $this) {
-                $validation->setUser(null);
+            if ($validation->getOwner() === $this) {
+                $validation->setOwner(null);
             }
         }
 
@@ -192,7 +192,7 @@ class User implements UserInterface
     {
         if (!$this->sye->contains($sye)) {
             $this->sye->add($sye);
-            $sye->setUser($this);
+            $sye->setOwner($this);
         }
 
         return $this;
@@ -202,8 +202,8 @@ class User implements UserInterface
     {
         if ($this->sye->removeElement($sye)) {
             // set the owning side to null (unless already changed)
-            if ($sye->getUser() === $this) {
-                $sye->setUser(null);
+            if ($sye->getOwner() === $this) {
+                $sye->setOwner(null);
             }
         }
 
@@ -222,7 +222,7 @@ class User implements UserInterface
     {
         if (!$this->syntheticColumn->contains($syntheticColumn)) {
             $this->syntheticColumn->add($syntheticColumn);
-            $syntheticColumn->setUser($this);
+            $syntheticColumn->setOwner($this);
         }
 
         return $this;
@@ -232,8 +232,8 @@ class User implements UserInterface
     {
         if ($this->syntheticColumn->removeElement($syntheticColumn)) {
             // set the owning side to null (unless already changed)
-            if ($syntheticColumn->getUser() === $this) {
-                $syntheticColumn->setUser(null);
+            if ($syntheticColumn->getOwner() === $this) {
+                $syntheticColumn->setOwner(null);
             }
         }
 
@@ -252,7 +252,7 @@ class User implements UserInterface
     {
         if (!$this->tables->contains($table)) {
             $this->tables->add($table);
-            $table->setUser($this);
+            $table->setOwner($this);
         }
 
         return $this;
@@ -262,8 +262,8 @@ class User implements UserInterface
     {
         if ($this->tables->removeElement($table)) {
             // set the owning side to null (unless already changed)
-            if ($table->getUser() === $this) {
-                $table->setUser(null);
+            if ($table->getOwner() === $this) {
+                $table->setOwner(null);
             }
         }
 
@@ -282,7 +282,7 @@ class User implements UserInterface
     {
         if (!$this->occurrences->contains($occurrence)) {
             $this->occurrences->add($occurrence);
-            $occurrence->setUser($this);
+            $occurrence->setOwner($this);
         }
 
         return $this;
@@ -292,8 +292,8 @@ class User implements UserInterface
     {
         if ($this->occurrences->removeElement($occurrence)) {
             // set the owning side to null (unless already changed)
-            if ($occurrence->getUser() === $this) {
-                $occurrence->setUser(null);
+            if ($occurrence->getOwner() === $this) {
+                $occurrence->setOwner(null);
             }
         }
 

@@ -30,7 +30,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $tableValidations = [];
 
         // VL USER
-        $u = $table->getUser();
+        $u = $table->getOwner();
         $vlUser = (object)array(
             'id' => $u->getId(),
             'ssoId' => $u->getSsoId(),
@@ -74,8 +74,8 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $data['hasPdf']           = (null !== $table->getPdf()) ? true : false;
         $data['pdfContentUrl']    = (null !== $table->getPdf()) ? $table->getPdf()->getContentUrl() : null;
 
-        $data['userId']           = $table->getUserId();
-        $date['userPseudo']       = $table->getUserPseudo();
+        $data['userId']           = $u->getId();
+        $date['userPseudo']       = $u->getUserPseudo();
         $data['user']             = $vlUser;
 
         $data['createdBy']        = $table->getCreatedBy();

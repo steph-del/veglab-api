@@ -42,7 +42,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         //}
 
         // VL USER
-        $u = $occ->getUser();
+        $u = $occ->getOwner();
         $vlUser = (object)array(
             'id' => $u->getId(),
             //'ssoId' => $u->getSsoId(),
