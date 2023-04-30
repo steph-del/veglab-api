@@ -35,10 +35,9 @@ class Sye
     #[Groups(['table::read', 'table::create'])]
     private Collection $validations;
 
-    // @TODO what is this ?
     #[ORM\Column]
     #[Groups(['table::read', 'table::create'])]
-    private ?int $syeId = null;
+    private ?int $syePosition = null;
 
     #[ORM\ManyToOne(inversedBy: 'sye')]
     #[ORM\JoinColumn(nullable: false)]
@@ -183,14 +182,14 @@ class Sye
         return $this;
     }
 
-    public function getSyeId(): ?int
+    public function getSyePosition(): ?int
     {
-        return $this->syeId;
+        return $this->syePosition;
     }
 
-    public function setSyeId(int $syeId): self
+    public function setSyePosition(int $syePosition): self
     {
-        $this->syeId = $syeId;
+        $this->syePosition = $syePosition;
 
         return $this;
     }
