@@ -41,7 +41,6 @@ class SyntheticItem
     #[Groups(['table::read', 'table::create'])]
     private ?string $displayName = null;
 
-    // @TODO nullable ?
     #[ORM\Column(nullable: true)]
     #[Groups(['table::read', 'table::create'])]
     private ?int $occurrenceCount = null;
