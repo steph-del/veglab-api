@@ -8,6 +8,17 @@ fos_elastica:
             password: '%env(FOS_ELASTICA_PASSWORD)%'
         }
     indexes:
+        users:
+            properties:
+                id:
+                    type: "text"
+            persistence:
+                driver: orm
+                model: App\Entity\User
+                provider: ~
+                finder: ~
+                repository: ~
+
         occurrences:
             index_name: '%env(FOS_ELASTICA_INDEXES_OCCURRENCES_INDEX_NAME)%'
             settings:
