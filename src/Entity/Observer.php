@@ -18,9 +18,8 @@ class Observer
     #[ORM\Column]
     #[Groups(['table::create'])]
     private ?int $id = null;
-
-    // @TODO check cascade props
-    #[ORM\ManyToMany(targetEntity: Occurrence::class, inversedBy: 'vlObservers', cascade: ['persist', 'remove'])]
+    
+    #[ORM\ManyToMany(targetEntity: Occurrence::class, inversedBy: 'vlObservers', cascade: ['persist'])]
     private Collection $occurrences;
 
     #[ORM\Column(length: 255)]
