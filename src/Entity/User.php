@@ -32,9 +32,6 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: OccurrenceValidation::class)]
     private Collection $validation;
 
-    #[ORM\OneToMany(mappedBy: 'userValidation', targetEntity: OccurrenceValidation::class)]
-    private Collection $userValidation;
-
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Sye::class)]
     private Collection $sye;
 
@@ -54,7 +51,6 @@ class User implements UserInterface
     {
         $this->id = $id;
         $this->validation = new ArrayCollection();
-        $this->userValidation = new ArrayCollection();
         $this->sye = new ArrayCollection();
         $this->syntheticColumn = new ArrayCollection();
         $this->tables = new ArrayCollection();
@@ -150,36 +146,6 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($validation->getOwner() === $this) {
                 $validation->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, OccurrenceValidation>
-     */
-    public function getUserValidation(): Collection
-    {
-        return $this->userValidation;
-    }
-
-    public function addUserValidation(OccurrenceValidation $userValidation): self
-    {
-        if (!$this->userValidation->contains($userValidation)) {
-            $this->userValidation->add($userValidation);
-            $userValidation->setUserValidation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserValidation(OccurrenceValidation $userValidation): self
-    {
-        if ($this->userValidation->removeElement($userValidation)) {
-            // set the owning side to null (unless already changed)
-            if ($userValidation->getUserValidation() === $this) {
-                $userValidation->setUserValidation(null);
             }
         }
 

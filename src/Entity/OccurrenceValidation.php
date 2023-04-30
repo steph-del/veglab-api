@@ -44,12 +44,6 @@ class OccurrenceValidation
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?User $owner = null;
 
-    // @TODO To delete ?
-    #[ORM\ManyToOne(inversedBy: 'userValidation')]
-    #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?User $userValidation = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $repository = null;
@@ -156,18 +150,6 @@ class OccurrenceValidation
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
-
-        return $this;
-    }
-
-    public function getUserValidation(): ?User
-    {
-        return $this->userValidation;
-    }
-
-    public function setUserValidation(?User $userValidation): self
-    {
-        $this->userValidation = $userValidation;
 
         return $this;
     }
