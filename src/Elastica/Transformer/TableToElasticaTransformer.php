@@ -33,7 +33,6 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $u = $table->getOwner();
         $vlUser = (object)array(
             'id' => $u->getId(),
-            'ssoId' => $u->getSsoId(),
             'firstName' => $u->getFirstName(),
             'lastName' => $u->getLastName(),
             'username' => $u->getUsername(),

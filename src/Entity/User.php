@@ -24,9 +24,6 @@ class User implements UserInterface
     #[Groups(['read', 'table::create', 'occurrence::create'])]
     private string $id;
 
-    // @TODO Remove
-    private string $ssoId;
-
     private array $roles;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: OccurrenceValidation::class)]
@@ -61,14 +58,6 @@ class User implements UserInterface
      * @return string
      */
     public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSSoId(): string
     {
         return $this->id;
     }

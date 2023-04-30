@@ -42,8 +42,6 @@ fos_elastica:
                 ###    properties:
                 ###        id:
                 ###            type: "integer"
-                ###        ssoId:
-                ###            type: "text"
                 ###        firstName:
                 ###            type: "text"
                 ###        lastName:
@@ -78,8 +76,6 @@ fos_elastica:
                 ###            properties:
                 ###                id:
                 ###                    type: "integer"
-                ###                ssoId:
-                ###                    type: "text"
                 ###                firstName:
                 ###                    type: "text"
                 ###                lastName:
