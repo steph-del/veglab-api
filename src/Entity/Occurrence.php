@@ -68,7 +68,6 @@ class Occurrence
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $dateCreated = null;
 
-    // @TODO nullable ?
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $dateUpdated = null;
