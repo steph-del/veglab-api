@@ -229,7 +229,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['userId'] = $occ->getUserId();
         //$data['userEmail'] = $occ->getUserEmail();
         //$data['userPseudo'] = $occ->getUserPseudo();
-        $data['user'] = $vlUser;
+        $data['owner'] = $vlUser;
         //$data['observer'] = $occ->getObserver();
         //$data['observerInstitution'] = $occ->getObserverInstitution();
         $data['vlObservers']= $vlObservers;
