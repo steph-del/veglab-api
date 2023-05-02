@@ -34,13 +34,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $vlObservers = [];
         $flatVlObservers = '';
 
-        // For the KISS principle-sake, we use the string data type instead of
-        // nested. Please note that string can contain arrays:
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/array.html
-        //foreach($occ->getUserOccurrenceTags() as $tag){
-        //    $tags[] = $tag->getName();
-        //}
-
         // VL USER
         $u = $occ->getOwner();
         $vlUser = (object)array(
@@ -52,7 +45,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         );
 
         // VL Identification
-        // Ignored for CEL occurrence (no identifications data)
         foreach($occ->getIdentifications() as $identification) {
             $v = array(
                 'id' => $identification->getId(),
@@ -71,7 +63,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         }
 
         // VL Flat identification
-        // Ignored for CEL occurrence (no identifications data)
         $i = 0;
         foreach($occ->getIdentifications() as $identification) {
             $flatIdentification = $identification->getRepository() . '~' . $identification->getRepositoryIdTaxo();
@@ -80,14 +71,12 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         }
 
         // VL Children ids
-        // Ignored for CEL occurrence (no children)
         foreach($occ->getChildren() as $child) {
             $childrenIds[] = $child->getId();
         }
 
         /*
          * VL - children identifications
-         * Ignored for CEL occurrence (no level set or 'idiotaxon' level)
          * If occurrence level is 'microcenosis', we go through 2 levels depth
          * Else, one level is enough
          */
@@ -129,11 +118,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         }
 
         // VL ExtendedFieldValues builder
-        // ********************************
-        // IMPORTANT
-        // CEL occurrences may be concerned
-        // To ignore CEL occurences, add an if ($occ->getInputSource() === InputSourceEnumType::VEGLAB) { ... }
-        // ********************************
         // The purpose of this loop :
         //   whitout any mapping, elasticsearch would map any ExtendedField as a string
         //   but veglab uses ExtendedField as filters trough elasticsearch queries
@@ -207,7 +191,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         // VL observers
         $iVlObs = 0;
         foreach($occ->getVlObservers() as $occVlObserver) {
-            // $vlObservers[] = $occVlObserver ? $occVlObserver : null;
             $o = array(
                 'id' => $occVlObserver->getId(),
                 'name' => $occVlObserver->getName()
@@ -225,11 +208,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['id_keyword'] = $occ->getId();
         $data['geometry'] = json_decode($occ->getGeometry());
         $data['userId'] = $occ->getUserId();
-        //$data['userEmail'] = $occ->getUserEmail();
-        //$data['userPseudo'] = $occ->getUserPseudo();
         $data['owner'] = $vlUser;
-        //$data['observer'] = $occ->getObserver();
-        //$data['observerInstitution'] = $occ->getObserverInstitution();
         $data['vlObservers']= $vlObservers;
         $data['flatVlObservers'] = $flatVlObservers;
         $dateObserved = $occ->getFormattedDateObserved();
@@ -243,29 +222,14 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['dateCreated_keyword'] = $occ->getFormattedDateCreated();
         $data['dateUpdated'] = $occ->getFormattedDateUpdated();
         $data['datePublished'] = $occ->getFormattedDatePublished();
-        //$data['userSciName'] = $occ->getUserSciName();
-        //$data['userSciName_keyword'] = $occ->getUserSciName();
-        //$data['userSciNameId'] = $occ->getUserSciNameId();
-        //$data['acceptedSciName'] = $occ->getAcceptedSciName();
-        //$data['acceptedSciNameId'] = $occ->getAcceptedSciNameId();
-        //$data['plantnetId'] = $occ->getPlantnetId();
-        //$data['family'] = $occ->getFamily();
-        //$data['family_keyword'] = $occ->getFamily();
         $data['certainty'] = $occ->getCertainty();
         $data['certainty_keyword'] = $occ->getCertainty();
         $data['occurrenceType'] = $occ->getOccurrenceType();
-        //$data['isWild'] = $occ->getIsWild();
         $data['coef'] = $occ->getCoef();
-        //$data['phenology'] = $occ->getPhenology();
-        //$data['sampleHerbarium'] = $occ->getSampleHerbarium();
-        //$data['bibliographySource'] = $occ->getBibliographySource();
         $data['bibliographySourceId'] = $occ->getVlBiblioSource() ? $occ->getVlBiblioSource()->getId() : null;
         $data['vlBiblioSource'] = $occ->getVlBiblioSource() ? $occ->getVlBiblioSource()->getTitle() : null;
-        //$data['inputSource'] = $occ->getInputSource();
         $data['isPublic'] = $occ->getIsPublic();
         $data['isPublic_keyword'] = $occ->getIsPublic();
-        //$data['isVisibleInCel'] = $occ->getIsVisibleInCel();
-        //$data['isVisibleInVegLab'] = $occ->getIsVisibleInVegLab();
         $data['signature'] = $occ->getSignature();
         $data['elevation'] = $occ->getElevation();
         $data['isElevationEstimated'] = $occ->getIsElevationEstimated();
@@ -274,12 +238,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['locality'] = $occ->getLocality();
         $data['localityInseeCode'] = $occ->getLocalityInseeCode();
         $data['locality_keyword'] = $occ->getLocality();
-        //$data['sublocality'] = $occ->getSublocality();
-        //$data['environment'] = $occ->getEnvironment();
-        //$data['localityConsistency'] = $occ->getLocalityConsistency();
-        //$data['station'] = $occ->getStation();
         $data['publishedLocation'] = $occ->getPublishedLocation();
-        //$data['locationAccuracy'] = $occ->getLocationAccuracy();
         $data['vlLocationAccuracy'] = $occ->getVlLocationAccuracy();
         $data['osmCounty'] = $occ->getOsmCounty();
         $data['osmState'] = $occ->getOsmState();
@@ -288,11 +247,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['osmCountryCode'] = $occ->getOsmCountryCode();
         $data['osmId'] = $occ->getOsmId();
         $data['osmPlaceId'] = $occ->getOsmPlaceId();
-        //$data['identiplanteScore'] = $occ->getIdentiplanteScore();
-        //$data['identiplanteScore_keyword'] = $occ->getIdentiplanteScore();
-        //$data['isIdentiplanteValidated'] = $occ->getIsIdentiplanteValidated();
-        //$data['taxoRepo'] = $occ->getTaxoRepo();
-        //$data['frenchDep'] = $occ->getFrenchDep();
         $data['level'] = $occ->getLevel();
         $data['parentId'] = null !== $occ->getParent() ? $occ->getParent()->getId() : null;
         $data['childrenIds'] = $childrenIds;
@@ -304,10 +258,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['childrenPreview'] = $childrenPreview;
         $data['extendedFieldValues'] = $ExtendedFieldValues;
         $data['vlWorkspace'] = $occ->getVlWorkspace();
-
-        //if ( null !== $occ->getProject()) {
-        //    $data['projectId'] = $occ->getProject()->getId();
-        //}
 
         return $data;
     }
