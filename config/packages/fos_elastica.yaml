@@ -101,11 +101,11 @@ fos_elastica:
                 ###            type: "long"
                 ###        repositoryIdTaxo:
                 ###            type: "text"
-                ###        inputName:
+                ###        citationName:
                 ###            type: "text"
-                ###        validatedName:
+                ###        taxonomicalName:
                 ###            type: "text"
-                ###        validName:
+                ###        nomenclaturalName:
                 ###            type: "text"
                 ###        isDiagnosis:
                 ###            type: "boolean"
@@ -253,11 +253,11 @@ fos_elastica:
                             type: "long"
                         repositoryIdTaxo:
                             type: "text"
-                        inputName:
+                        citationName:
                             type: "text"
-                        validatedName:
+                        taxonomicalName:
                             type: "text"
-                        validName:
+                        nomenclaturalName:
                             type: "text"
                 items:
                     type: "nested"

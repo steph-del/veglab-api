@@ -58,15 +58,15 @@ class Identification
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?string $inputName = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?string $validatedName = null;
+    private ?string $citationName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?string $validName = null;
+    private ?string $nomenclaturalName = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    private ?string $taxonomicalName = null;
 
     #[ORM\ManyToOne(inversedBy: 'identifications')]
     private ?SyntheticColumn $syntheticColumn = null;
@@ -190,38 +190,38 @@ class Identification
         return $this;
     }
 
-    public function getInputName(): ?string
+    public function getCitationName(): ?string
     {
-        return $this->inputName;
+        return $this->citationName;
     }
 
-    public function setInputName(?string $inputName): self
+    public function setCitationName(?string $citationName): self
     {
-        $this->inputName = $inputName;
+        $this->citationName = $citationName;
 
         return $this;
     }
 
-    public function getValidatedName(): ?string
+    public function getTaxonomicalName(): ?string
     {
-        return $this->validatedName;
+        return $this->taxonomicalName;
     }
 
-    public function setValidatedName(string $validatedName): self
+    public function setTaxonomicalName(string $taxonomicalName): self
     {
-        $this->validatedName = $validatedName;
+        $this->taxonomicalName = $taxonomicalName;
 
         return $this;
     }
 
-    public function getValidName(): ?string
+    public function getNomenclaturalName(): ?string
     {
-        return $this->validName;
+        return $this->nomenclaturalName;
     }
 
-    public function setValidName(?string $validName): self
+    public function setNomenclaturalName(?string $nomenclaturalName): self
     {
-        $this->validName = $validName;
+        $this->nomenclaturalName = $nomenclaturalName;
 
         return $this;
     }

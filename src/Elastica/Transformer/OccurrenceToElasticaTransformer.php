@@ -64,9 +64,9 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
                 'repository' => $identification->getRepository(),
                 'repositoryIdNomen' => $identification->getRepositoryIdNomen(),
                 'repositoryIdTaxo' => $identification->getRepositoryIdTaxo(),
-                'inputName' => $identification->getInputName(),
-                'validatedName' => $identification->getValidatedName(),
-                'validName' => $identification->getValidName()
+                'citationName' => $identification->getCitationName(),
+                'nomenclaturalName' => $identification->getNomenclaturalName(),
+                'taxonomicalName' => $identification->getTaxonomicalName()
             );
             $identifications[] = $v;
         }
@@ -106,7 +106,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
                         $childrenPreview[] = array(
                             'layer' => $child->getLayer(),
                             'repo' => $grandChildIdentification->getRepository(),
-                            'name' => $grandChildIdentification->getRepository() === 'otherunknown' ? $grandChildIdentification->getInputName() : $grandChildIdentification->getValidatedName(),
+                            'name' => $grandChildIdentification->getRepository() === 'otherunknown' ? $grandChildIdentification->getCitationName() : $grandChildIdentification->getTaxonomicalName(),
                             'coef' => $grandChild->getCoef());
                         if ($i === 0) { $flatChildrenIdentifications = $flatGrandChildIdentification; } elseif ($i > 0) { $flatChildrenIdentifications = $flatChildrenIdentifications . ' ' . $flatGrandChildIdentification; }
                         $i++;
@@ -121,7 +121,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
                     $childrenPreview[] = array(
                         'layer' => $occ->getLayer(),
                         'repo' => $childIdentification->getRepository(),
-                        'name' => $childIdentification->getRepository() === 'otherunknown' ? $childIdentification->getInputName() : $childIdentification->getValidatedName(),
+                        'name' => $childIdentification->getRepository() === 'otherunknown' ? $childIdentification->getCitationName() : $childIdentification->getTaxonomicalName(),
                         'coef' => $child->getCoef());
                     if ($i === 0) { $flatChildrenIdentifications = $flatChildIdentification; } elseif ($i > 0) { $flatChildrenIdentifications = $flatChildrenIdentifications . ' ' . $flatChildIdentification; }
                     $i++;

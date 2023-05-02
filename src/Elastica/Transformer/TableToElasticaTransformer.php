@@ -52,9 +52,9 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
                 'repository' => $identification->getRepository(),
                 'repositoryIdNomen' => $identification->getRepositoryIdNomen(),
                 'repositoryIdTaxo' => $identification->getRepositoryIdTaxo(),
-                'inputName' => $identification->getInputName(),
-                'validatedName' => $identification->getValidatedName(),
-                'validName' => $identification->getValidName(),
+                'citationName' => $identification->getCitationName(),
+                'nomenclaturalName' => $identification->getNomenclaturalName(),
+                'taxonomicalName' => $identification->getTaxonomicalName(),
                 'userIdIdentification' => $identification->getOwner()->getId()
             );
             $tableIdentifications[] = $ident;
@@ -88,7 +88,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $data['occurrencesAndSyeIdentifications']  = $this->getSyeAndOccurrencesIdentifications($table->getSye());
         $data['rowsIdentifications']  = $this->getRowsIdentifications($table);
 
-        $data['tableName']        = (null !== $table->getIdentifications()[0]) ? $table->getIdentifications()[0]->getValidatedName() : '';
+        $data['tableName']        = (null !== $table->getIdentifications()[0]) ? $table->getIdentifications()[0]->getTaxonomicalName() : '';
         $data['occurrencesNames'] = $this->getOccurrencesNames($table);
 
         $data['syeCount']         = count($table->getSye());
@@ -338,7 +338,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
             $occurrences = $sye->getOccurrences();
             foreach ($occurrences as $occ) {
                 $identification = $occ->getIdentifications()[0];
-                if (null !== $identification) $ident[] = $identification->getValidatedName();
+                if (null !== $identification) $ident[] = $identification->getTaxonomicalName();
             }
         }
 
