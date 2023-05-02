@@ -26,8 +26,8 @@ class User implements UserInterface
 
     private array $roles;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: OccurrenceValidation::class)]
-    private Collection $validation;
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Identification::class)]
+    private Collection $identification;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Sye::class)]
     private Collection $sye;
@@ -46,9 +46,9 @@ class User implements UserInterface
      */
     public function __construct(string $id)
     {
-        $this->id = $id;
-        $this->validation = new ArrayCollection();
-        $this->sye = new ArrayCollection();
+        $this->id             = $id;
+        $this->identification = new ArrayCollection();
+        $this->sye            = new ArrayCollection();
         $this->syntheticColumn = new ArrayCollection();
         $this->tables = new ArrayCollection();
         $this->occurrences = new ArrayCollection();
@@ -112,29 +112,29 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection<int, OccurrenceValidation>
+     * @return Collection<int, Identification>
      */
-    public function getValidation(): Collection
+    public function getIdentification(): Collection
     {
-        return $this->validation;
+        return $this->identification;
     }
 
-    public function addValidation(OccurrenceValidation $validation): self
+    public function addIdentification(Identification $identification): self
     {
-        if (!$this->validation->contains($validation)) {
-            $this->validation->add($validation);
-            $validation->setOwner($this);
+        if (!$this->identification->contains($identification)) {
+            $this->identification->add($identification);
+            $identification->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeValidation(OccurrenceValidation $validation): self
+    public function removeIdentification(Identification $identification): self
     {
-        if ($this->validation->removeElement($validation)) {
+        if ($this->identification->removeElement($identification)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getOwner() === $this) {
-                $validation->setOwner(null);
+            if ($identification->getOwner() === $this) {
+                $identification->setOwner(null);
             }
         }
 

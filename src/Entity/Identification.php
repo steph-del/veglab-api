@@ -3,15 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\OccurrenceValidationRepository;
+use App\Repository\IdentificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
-#[ORM\Entity(repositoryClass: OccurrenceValidationRepository::class)]
+#[ORM\Entity(repositoryClass: IdentificationRepository::class)]
 #[ApiResource]
-class OccurrenceValidation
+class Identification
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,7 +19,7 @@ class OccurrenceValidation
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'validations')]
+    #[ORM\ManyToOne(inversedBy: 'identifications')]
     #[Groups(['occurrence::create'])]
     private ?Occurrence $occurrence = null;
 
@@ -39,7 +39,7 @@ class OccurrenceValidation
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'validation')]
+    #[ORM\ManyToOne(inversedBy: 'identification')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?User $owner = null;
@@ -68,13 +68,13 @@ class OccurrenceValidation
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?string $validName = null;
 
-    #[ORM\ManyToOne(inversedBy: 'validations')]
+    #[ORM\ManyToOne(inversedBy: 'identifications')]
     private ?SyntheticColumn $syntheticColumn = null;
 
-    #[ORM\ManyToOne(inversedBy: 'validations')]
+    #[ORM\ManyToOne(inversedBy: 'identifications')]
     private ?Table $_table = null;
 
-    #[ORM\ManyToOne(inversedBy: 'validations')]
+    #[ORM\ManyToOne(inversedBy: 'identifications')]
     private ?Sye $sye = null;
 
     public function getId(): ?int

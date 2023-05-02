@@ -31,9 +31,9 @@ class Sye
     #[Groups(['table::read', 'table::create'])]
     private Collection $occurrences;
 
-    #[ORM\OneToMany(mappedBy: 'sye', targetEntity: OccurrenceValidation::class)]
+    #[ORM\OneToMany(mappedBy: 'sye', targetEntity: Identification::class)]
     #[Groups(['table::read', 'table::create'])]
-    private Collection $validations;
+    private Collection $identifications;
 
     #[ORM\Column]
     #[Groups(['table::read', 'table::create'])]
@@ -75,7 +75,7 @@ class Sye
     {
         $this->extendedFieldOccurrences = new ArrayCollection();
         $this->occurrences = new ArrayCollection();
-        $this->validations = new ArrayCollection();
+        $this->identifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,29 +153,29 @@ class Sye
     }
 
     /**
-     * @return Collection<int, OccurrenceValidation>
+     * @return Collection<int, Identification>
      */
-    public function getValidations(): Collection
+    public function getIdentifications(): Collection
     {
-        return $this->validations;
+        return $this->identifications;
     }
 
-    public function addValidation(OccurrenceValidation $validation): self
+    public function addIdentification(Identification $identification): self
     {
-        if (!$this->validations->contains($validation)) {
-            $this->validations->add($validation);
-            $validation->setSye($this);
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications->add($identification);
+            $identification->setSye($this);
         }
 
         return $this;
     }
 
-    public function removeValidation(OccurrenceValidation $validation): self
+    public function removeIdentification(Identification $identification): self
     {
-        if ($this->validations->removeElement($validation)) {
+        if ($this->identifications->removeElement($identification)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getSye() === $this) {
-                $validation->setSye(null);
+            if ($identification->getSye() === $this) {
+                $identification->setSye(null);
             }
         }
 

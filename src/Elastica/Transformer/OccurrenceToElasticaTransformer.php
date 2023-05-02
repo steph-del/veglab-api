@@ -26,9 +26,9 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data = [];
         $tags = [];
         $childrenIds = [];
-        $validations = [];
-        $flatValidations = '';
-        $flatChildrenValidations = '';
+        $identifications = [];
+        $flatIdentifications = '';
+        $flatChildrenIdentifications = '';
         $childrenPreview = [];
         $ExtendedFieldValues = [];
         $vlObservers = [];
@@ -51,33 +51,32 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
             //'email' => $u->getEmail()
         );
 
-        // VL Validation
-        // Ignored for CEL occurrence (no validations data)
-        foreach($occ->getValidations() as $validation) {
+        // VL Identification
+        // Ignored for CEL occurrence (no identifications data)
+        foreach($occ->getIdentifications() as $identification) {
             $v = array(
-                'id' => $validation->getId(),
-                'validatedBy' => $validation->getValidatedBy(),
-                'validatedAt' => $validation->getValidatedAt() ? $validation->getValidatedAt()->format('Y-m-d H:i:s') : null,
+                'id' => $identification->getId(),
+                'validatedBy' => $identification->getValidatedBy(),
+                'validatedAt' => $identification->getValidatedAt() ? $identification->getValidatedAt()->format('Y-m-d H:i:s') : null,
                 'user' => $vlUser,
-                'updatedBy' => $validation->getUpdatedBy(),
-                'updatedAt' => $validation->getUpdatedAt() ? $validation->getUpdatedAt()->format('Y-m-d H:i:s') : null,
-                'repository' => $validation->getRepository(),
-                'repositoryIdNomen' => $validation->getRepositoryIdNomen(),
-                'repositoryIdTaxo' => $validation->getRepositoryIdTaxo(),
-                'inputName' => $validation->getInputName(),
-                'validatedName' => $validation->getValidatedName(),
-                'validName' => $validation->getValidName(),
-                //'userIdValidation' => $validation->getUserIdValidation()
+                'updatedBy' => $identification->getUpdatedBy(),
+                'updatedAt' => $identification->getUpdatedAt() ? $identification->getUpdatedAt()->format('Y-m-d H:i:s') : null,
+                'repository' => $identification->getRepository(),
+                'repositoryIdNomen' => $identification->getRepositoryIdNomen(),
+                'repositoryIdTaxo' => $identification->getRepositoryIdTaxo(),
+                'inputName' => $identification->getInputName(),
+                'validatedName' => $identification->getValidatedName(),
+                'validName' => $identification->getValidName()
             );
-            $validations[] = $v;
+            $identifications[] = $v;
         }
 
-        // VL Flat validation
-        // Ignored for CEL occurrence (no validations data)
+        // VL Flat identification
+        // Ignored for CEL occurrence (no identifications data)
         $i = 0;
-        foreach($occ->getValidations() as $validation) {
-            $flatValidation = $validation->getRepository() . '~' . $validation->getRepositoryIdTaxo();
-            if ($i === 0) { $flatValidations = $flatValidation; } elseif ($i > 0) { $flatValidations = $flatValidations . ' ' . $flatValidation; }
+        foreach($occ->getIdentifications() as $identification) {
+            $flatIdentification = $identification->getRepository() . '~' . $identification->getRepositoryIdTaxo();
+            if ($i === 0) { $flatIdentifications = $flatIdentification; } elseif ($i > 0) { $flatIdentifications = $flatIdentifications . ' ' . $flatIdentification; }
             $i++;
         }
 
@@ -88,7 +87,7 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         }
 
         /*
-         * VL - children validations
+         * VL - children identifications
          * Ignored for CEL occurrence (no level set or 'idiotaxon' level)
          * If occurrence level is 'microcenosis', we go through 2 levels depth
          * Else, one level is enough
@@ -96,20 +95,20 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         if ($occ->getLevel() === 'microcenosis') {
             $i = 0;
             foreach ($occ->getChildren() as $child) {
-                foreach($child->getValidations() as $childValidation) {
-                    $flatChildValidation = $childValidation->getRepository() . '~' . $childValidation->getRepositoryIdTaxo();
-                    if ($i === 0) { $flatChildrenValidations = $flatChildValidation; } elseif ($i > 0) { $flatChildrenValidations = $flatChildrenValidations . ' ' . $flatChildValidation; }
+                foreach($child->getIdentifications() as $childIdentification) {
+                    $flatChildIdentification = $childIdentification->getRepository() . '~' . $childIdentification->getRepositoryIdTaxo();
+                    if ($i === 0) { $flatChildrenIdentifications = $flatChildIdentification; } elseif ($i > 0) { $flatChildrenIdentifications = $flatChildrenIdentifications . ' ' . $flatChildIdentification; }
                     $i++;
                 }
                 foreach ($child->getChildren() as $grandChild) {
-                    foreach ($grandChild->getValidations() as $grandChildValidation) {
-                        $flatGrandChildValidation = $grandChildValidation->getRepository() . '~' . $grandChildValidation->getRepositoryIdTaxo();
+                    foreach ($grandChild->getIdentifications() as $grandChildIdentification) {
+                        $flatGrandChildIdentification = $grandChildIdentification->getRepository() . '~' . $grandChildIdentification->getRepositoryIdTaxo();
                         $childrenPreview[] = array(
                             'layer' => $child->getLayer(),
-                            'repo' => $grandChildValidation->getRepository(),
-                            'name' => $grandChildValidation->getRepository() === 'otherunknown' ? $grandChildValidation->getInputName() : $grandChildValidation->getValidatedName(),
+                            'repo' => $grandChildIdentification->getRepository(),
+                            'name' => $grandChildIdentification->getRepository() === 'otherunknown' ? $grandChildIdentification->getInputName() : $grandChildIdentification->getValidatedName(),
                             'coef' => $grandChild->getCoef());
-                        if ($i === 0) { $flatChildrenValidations = $flatGrandChildValidation; } elseif ($i > 0) { $flatChildrenValidations = $flatChildrenValidations . ' ' . $flatGrandChildValidation; }
+                        if ($i === 0) { $flatChildrenIdentifications = $flatGrandChildIdentification; } elseif ($i > 0) { $flatChildrenIdentifications = $flatChildrenIdentifications . ' ' . $flatGrandChildIdentification; }
                         $i++;
                     }
                 }
@@ -117,14 +116,14 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         } else {
             $i = 0;
             foreach ($occ->getChildren() as $child) {
-                foreach($child->getValidations() as $childValidation) {
-                    $flatChildValidation = $childValidation->getRepository() . '~' . $childValidation->getRepositoryIdTaxo();
+                foreach($child->getIdentifications() as $childIdentification) {
+                    $flatChildIdentification = $childIdentification->getRepository() . '~' . $childIdentification->getRepositoryIdTaxo();
                     $childrenPreview[] = array(
                         'layer' => $occ->getLayer(),
-                        'repo' => $childValidation->getRepository(),
-                        'name' => $childValidation->getRepository() === 'otherunknown' ? $childValidation->getInputName() : $childValidation->getValidatedName(),
+                        'repo' => $childIdentification->getRepository(),
+                        'name' => $childIdentification->getRepository() === 'otherunknown' ? $childIdentification->getInputName() : $childIdentification->getValidatedName(),
                         'coef' => $child->getCoef());
-                    if ($i === 0) { $flatChildrenValidations = $flatChildValidation; } elseif ($i > 0) { $flatChildrenValidations = $flatChildrenValidations . ' ' . $flatChildValidation; }
+                    if ($i === 0) { $flatChildrenIdentifications = $flatChildIdentification; } elseif ($i > 0) { $flatChildrenIdentifications = $flatChildrenIdentifications . ' ' . $flatChildIdentification; }
                     $i++;
                 }
             }
@@ -300,9 +299,9 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         $data['childrenIds'] = $childrenIds;
         $data['parentLevel'] = $occ->getParentLevel();
         $data['layer'] = $occ->getLayer();
-        $data['validations'] = $validations;
-        $data['flatValidations'] = $flatValidations;
-        $data['flatChildrenValidations'] = $flatChildrenValidations;
+        $data['identifications'] = $identifications;
+        $data['flatIdentifications'] = $flatIdentifications;
+        $data['flatChildrenIdentifications'] = $flatChildrenIdentifications;
         $data['childrenPreview'] = $childrenPreview;
         $data['extendedFieldValues'] = $ExtendedFieldValues;
         $data['vlWorkspace'] = $occ->getVlWorkspace();

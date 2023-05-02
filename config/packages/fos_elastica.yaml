@@ -67,7 +67,7 @@ fos_elastica:
                 ###layer:
                 ###    type: "keyword"
                 ###parentId: ~
-                ###validations:
+                ###identifications:
                 ###    type: "nested"
                 ###    properties:
                 ###        id:
@@ -242,7 +242,7 @@ fos_elastica:
         synthetic_columns:
             index_name: vl_synth_cols
             properties:
-                validations:
+                identifications:
                     type: "nested"
                     properties:
                         id:

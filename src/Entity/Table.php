@@ -34,9 +34,9 @@ class Table
     #[Groups(['table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
-    #[ORM\OneToMany(mappedBy: '_table', targetEntity: OccurrenceValidation::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: '_table', targetEntity: Identification::class, cascade: ['persist', 'remove'])]
     #[Groups(['table::read', 'table::create'])]
-    private Collection $validations;
+    private Collection $identifications;
 
     #[ORM\OneToOne(mappedBy: '_table', cascade: ['persist', 'remove'])]
     #[Groups(['table::read', 'table::create'])]
@@ -94,9 +94,9 @@ class Table
 
     public function __construct()
     {
-        $this->rowsDefinition = new ArrayCollection();
-        $this->validations = new ArrayCollection();
-        $this->sye = new ArrayCollection();
+        $this->rowsDefinition  = new ArrayCollection();
+        $this->identifications = new ArrayCollection();
+        $this->sye             = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,29 +147,29 @@ class Table
     }
 
     /**
-     * @return Collection<int, OccurrenceValidation>
+     * @return Collection<int, Identification>
      */
-    public function getValidations(): Collection
+    public function getIdentifications(): Collection
     {
-        return $this->validations;
+        return $this->identifications;
     }
 
-    public function addValidation(OccurrenceValidation $validation): self
+    public function addIdentification(Identification $identification): self
     {
-        if (!$this->validations->contains($validation)) {
-            $this->validations->add($validation);
-            $validation->setTable($this);
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications->add($identification);
+            $identification->setTable($this);
         }
 
         return $this;
     }
 
-    public function removeValidation(OccurrenceValidation $validation): self
+    public function removeIdentification(Identification $identification): self
     {
-        if ($this->validations->removeElement($validation)) {
+        if ($this->identifications->removeElement($identification)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getTable() === $this) {
-                $validation->setTable(null);
+            if ($identification->getTable() === $this) {
+                $identification->setTable(null);
             }
         }
 

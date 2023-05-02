@@ -28,9 +28,9 @@ class SyntheticColumn
     #[Groups(['table::read', 'table::create'])]
     private Collection $extendedFieldOccurrences;
 
-    #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: OccurrenceValidation::class)]
+    #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: Identification::class)]
     #[Groups(['table::read', 'table::create'])]
-    private Collection $validations;
+    private Collection $identifications;
 
     #[ORM\OneToOne(mappedBy: 'syntheticColumn', cascade: ['persist', 'remove'])]
     private ?Sye $sye = null;
@@ -54,8 +54,8 @@ class SyntheticColumn
     public function __construct()
     {
         $this->extendedFieldOccurrences = new ArrayCollection();
-        $this->validations = new ArrayCollection();
-        $this->items = new ArrayCollection();
+        $this->identifications          = new ArrayCollection();
+        $this->items                    = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,29 +106,29 @@ class SyntheticColumn
     }
 
     /**
-     * @return Collection<int, OccurrenceValidation>
+     * @return Collection<int, Identification>
      */
-    public function getValidations(): Collection
+    public function getIdentifications(): Collection
     {
-        return $this->validations;
+        return $this->identifications;
     }
 
-    public function addValidation(OccurrenceValidation $validation): self
+    public function addIdentification(Identification $identification): self
     {
-        if (!$this->validations->contains($validation)) {
-            $this->validations->add($validation);
-            $validation->setSyntheticColumn($this);
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications->add($identification);
+            $identification->setSyntheticColumn($this);
         }
 
         return $this;
     }
 
-    public function removeValidation(OccurrenceValidation $validation): self
+    public function removeIdentification(Identification $identification): self
     {
-        if ($this->validations->removeElement($validation)) {
+        if ($this->identifications->removeElement($identification)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getSyntheticColumn() === $this) {
-                $validation->setSyntheticColumn(null);
+            if ($identification->getSyntheticColumn() === $this) {
+                $identification->setSyntheticColumn(null);
             }
         }
 

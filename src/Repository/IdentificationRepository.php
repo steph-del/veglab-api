@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\OccurrenceValidation;
+use App\Entity\Identification;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<OccurrenceValidation>
+ * @extends ServiceEntityRepository<Identification>
  *
- * @method OccurrenceValidation|null find($id, $lockMode = null, $lockVersion = null)
- * @method OccurrenceValidation|null findOneBy(array $criteria, array $orderBy = null)
- * @method OccurrenceValidation[]    findAll()
- * @method OccurrenceValidation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Identification|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Identification|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Identification[]    findAll()
+ * @method Identification[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OccurrenceValidationRepository extends ServiceEntityRepository
+class IdentificationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, OccurrenceValidation::class);
+        parent::__construct($registry, Identification::class);
     }
 
-    public function save(OccurrenceValidation $entity, bool $flush = false): void
+    public function save(Identification $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class OccurrenceValidationRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(OccurrenceValidation $entity, bool $flush = false): void
+    public function remove(Identification $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class OccurrenceValidationRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return OccurrenceValidation[] Returns an array of OccurrenceValidation objects
+//     * @return OccurrenceIdentification[] Returns an array of OccurrenceIdentification objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class OccurrenceValidationRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?OccurrenceValidation
+//    public function findOneBySomeField($value): ?OccurrenceIdentification
 //    {
 //        return $this->createQueryBuilder('o')
 //            ->andWhere('o.exampleField = :val')

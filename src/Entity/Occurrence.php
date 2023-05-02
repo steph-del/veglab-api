@@ -168,9 +168,9 @@ class Occurrence
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?int $osmPlaceId = null;
 
-    #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: OccurrenceValidation::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: Identification::class, cascade: ["persist"])]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private Collection $validations;
+    private Collection $identifications;
 
     #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: ExtendedFieldOccurrence::class)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
@@ -193,7 +193,7 @@ class Occurrence
     {
         $this->vlObservers = new ArrayCollection();
         $this->children = new ArrayCollection();
-        $this->validations = new ArrayCollection();
+        $this->identifications = new ArrayCollection();
         $this->extendedFieldOccurrences = new ArrayCollection();
         $this->syes = new ArrayCollection();
     }
@@ -669,29 +669,29 @@ class Occurrence
     }
 
     /**
-     * @return Collection<int, OccurrenceValidation>
+     * @return Collection<int, Identification>
      */
-    public function getValidations(): Collection
+    public function getIdentifications(): Collection
     {
-        return $this->validations;
+        return $this->identifications;
     }
 
-    public function addValidation(OccurrenceValidation $validation): self
+    public function addIdentification(Identification $identification): self
     {
-        if (!$this->validations->contains($validation)) {
-            $this->validations->add($validation);
-            $validation->setOccurrence($this);
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications->add($identification);
+            $identification->setOccurrence($this);
         }
 
         return $this;
     }
 
-    public function removeValidation(OccurrenceValidation $validation): self
+    public function removeIdentification(Identification $identification): self
     {
-        if ($this->validations->removeElement($validation)) {
+        if ($this->identifications->removeElement($identification)) {
             // set the owning side to null (unless already changed)
-            if ($validation->getOccurrence() === $this) {
-                $validation->setOccurrence(null);
+            if ($identification->getOccurrence() === $this) {
+                $identification->setOccurrence(null);
             }
         }
 

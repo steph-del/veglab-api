@@ -2,7 +2,7 @@
 
 namespace App\Elastica\Transformer;
 
-use App\Entity\OccurrenceValidation;
+use App\Entity\Identification;
 use Elastica\Document;
 use FOS\ElasticaBundle\Transformer\ModelToElasticaTransformerInterface;
 use stdClass;
@@ -27,7 +27,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
     protected function buildData($table): array
     {
         $data = [];
-        $tableValidations = [];
+        $tableIdentifications = [];
 
         // VL USER
         $u = $table->getOwner();
@@ -39,27 +39,27 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
             'email' => $u->getEmail()
         );
 
-        // VL Table Validation
-        $inlineTableValidations = '';
-        foreach($table->getValidations() as $validation) {
-            $v = array(
-                'id' => $validation->getId(),
-                'validatedBy' => $validation->getValidatedBy(),
-                'validatedAt' => $validation->getValidatedAt() ? $validation->getValidatedAt()->format('Y-m-d H:i:s') : null,
-                'user' => $vlUser,
-                'updatedBy' => $validation->getUpdatedBy(),
-                'updatedAt' => $validation->getUpdatedAt() ? $validation->getUpdatedAt()->format('Y-m-d H:i:s') : null,
-                'repository' => $validation->getRepository(),
-                'repositoryIdNomen' => $validation->getRepositoryIdNomen(),
-                'repositoryIdTaxo' => $validation->getRepositoryIdTaxo(),
-                'inputName' => $validation->getInputName(),
-                'validatedName' => $validation->getValidatedName(),
-                'validName' => $validation->getValidName(),
-                'userIdValidation' => $validation->getUserIdValidation()
+        // VL Table Identification
+        $inlineTableIdentifications = '';
+        foreach($table->getIdentifications() as $identification) {
+            $ident = array(
+                'id' => $identification->getId(),
+                'validatedBy' => $identification->getValidatedBy(),
+                'validatedAt' => $identification->getValidatedAt() ? $identification->getValidatedAt()->format('Y-m-d H:i:s') : null,
+                'owner' => $vlUser,
+                'updatedBy' => $identification->getUpdatedBy(),
+                'updatedAt' => $identification->getUpdatedAt() ? $identification->getUpdatedAt()->format('Y-m-d H:i:s') : null,
+                'repository' => $identification->getRepository(),
+                'repositoryIdNomen' => $identification->getRepositoryIdNomen(),
+                'repositoryIdTaxo' => $identification->getRepositoryIdTaxo(),
+                'inputName' => $identification->getInputName(),
+                'validatedName' => $identification->getValidatedName(),
+                'validName' => $identification->getValidName(),
+                'userIdIdentification' => $identification->getOwner()->getId()
             );
-            $tableValidations[] = $v;
-            if ($validation->getRepository() && $validation->getRepositoryIdTaxo()) {
-                $inlineTableValidations .= $validation->getRepository() . '~' . $validation->getRepositoryIdTaxo() . ' ';
+            $tableIdentifications[] = $ident;
+            if ($identification->getRepository() && $identification->getRepositoryIdTaxo()) {
+                $inlineTableIdentifications .= $identification->getRepository() . '~' . $identification->getRepositoryIdTaxo() . ' ';
             }
         }
 
@@ -82,20 +82,20 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $data['updatedBy']        = $table->getUpdatedBy();
         $data['updatedAt']        = $this->getFormattedDate($table->getUpdatedAt());
 
-        $data['validations']      = $tableValidations;
-        $data['tableValidation'] = $inlineTableValidations;
-        // $data['syeValidations']   = $this->getSyeValidations($table->getSye());
-        $data['occurrencesAndSyeValidations']  = $this->getSyeAndOccurrencesValidations($table->getSye());
-        $data['rowsValidations']  = $this->getRowsValidations($table);
+        $data['identifications']      = $tableIdentifications;
+        $data['tableIdentification'] = $inlineTableIdentifications;
+        // $data['syeIdentifications']   = $this->getSyeIdentifications($table->getSye());
+        $data['occurrencesAndSyeIdentifications']  = $this->getSyeAndOccurrencesIdentifications($table->getSye());
+        $data['rowsIdentifications']  = $this->getRowsIdentifications($table);
 
-        $data['tableName']        = (null !== $table->getValidations()[0]) ? $table->getValidations()[0]->getValidatedName() : '';
+        $data['tableName']        = (null !== $table->getIdentifications()[0]) ? $table->getIdentifications()[0]->getValidatedName() : '';
         $data['occurrencesNames'] = $this->getOccurrencesNames($table);
 
         $data['syeCount']         = count($table->getSye());
         $data['rowsCount']        = $this->getRowsCount($table);
         $data['occurrencesCount'] = $this->getOccurrencesCount($table);
 
-        $data['allValidations']   = $this->getValidations($table);
+        $data['allIdentifications']   = $this->getIdentifications($table);
 
         $data['vlBiblioSource']   = $table->getVlBiblioSource() ? $table->getVlBiblioSource()->getId().'~'.$table->getVlBiblioSource()->getTitle() : null;
 
@@ -111,61 +111,61 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         return  (null !== $date) ? $date->format('Y-m-d H:i:s') : null;
     }
 
-    private function getTableValidation(?OccurrenceValidation $validation): ?string
+    private function getTableIdentification(?Identification $identification): ?string
     {
-        if (null === $validation) return '';
-        return $validation->getRepository() . '~' . $validation->getRepositoryIdTaxo();
+        if (null === $identification) return '';
+        return $identification->getRepository() . '~' . $identification->getRepositoryIdTaxo();
     }
 
-    private function getSyeValidations($syes): ?string
+    private function getSyeIdentifications($syes): ?string
     {
-        $flatValidations = '';
+        $flatIdentifications = '';
 
         if (null === $syes) return '';
 
         foreach ($syes as $sye) {
-            if (null !== $sye->getValidations()) {
-                foreach($sye->getValidations() as $syeValidation) {
+            if (null !== $sye->getIdentifications()) {
+                foreach($sye->getIdentifications() as $syeIdentification) {
                     $i = 0;
-                    $flatValidation = $syeValidation->getRepository() . '~' . $syeValidation->getRepositoryIdTaxo();
-                    if ($i === 0) { $flatValidations = $flatValidation; } elseif ($i > 0) { $flatValidations = $flatValidations . ' ' . $flatValidation; }
+                    $flatIdentification = $syeIdentification->getRepository() . '~' . $syeIdentification->getRepositoryIdTaxo();
+                    if ($i === 0) { $flatIdentifications = $flatIdentification; } elseif ($i > 0) { $flatIdentifications = $flatIdentifications . ' ' . $flatIdentification; }
                     $i++;
                 }
             }
         }
 
-        return $flatValidations;
+        return $flatIdentifications;
 
 
     }
 
     /**
-     * Returns a flat validations string that contains every SYE AND idiotaxons validations
+     * Returns a flat identifications string that contains every SYE AND idiotaxons identifications
      */
-    private function getSyeAndOccurrencesValidations($syes): ?string
+    private function getSyeAndOccurrencesIdentifications($syes): ?string
     {
-        $flatValidations = '';
+        $flatIdentifications = '';
 
         if (null === $syes) return '';
 
         $i = 0;
         foreach ($syes as $sye) {
-            $syeValidations = $sye->getValidations();
-            if (null !== $syeValidations) {
-                foreach ($syeValidations as $syeValidation) {
-                    $flatValidationSye = $syeValidation->getRepository() . '~' . $syeValidation->getRepositoryIdTaxo();
-                    $flatValidations .= $flatValidationSye . ' ';
+            $syeIdentifications = $sye->getIdentifications();
+            if (null !== $syeIdentifications) {
+                foreach ($syeIdentifications as $syeIdentification) {
+                    $flatIdentificationSye = $syeIdentification->getRepository() . '~' . $syeIdentification->getRepositoryIdTaxo();
+                    $flatIdentifications .= $flatIdentificationSye . ' ';
                 }
             }
-            // $flatValidation = $this->getOccurrencesValidations($sye->getOccurrences());
-            // if ($i === 0) { $flatValidations = $flatValidation; } elseif ($i > 0) { $flatValidations = $flatValidations . ' ' . $flatValidation; }
+            // $flatIdentification = $this->getOccurrencesIdentifications($sye->getOccurrences());
+            // if ($i === 0) { $flatIdentifications = $flatIdentification; } elseif ($i > 0) { $flatIdentifications = $flatIdentifications . ' ' . $flatIdentificationn; }
 
             foreach ($sye->getOccurrences() as $occ) {
-                $occValidations = $occ->getValidations();
-                if (null !== $occValidations) {
-                    foreach ($occValidations as $occValidation) {
-                        $flatValidationOcc = $occValidation->getRepository() . '~' . $occValidation->getRepositoryIdTaxo();
-                        $flatValidations .= $flatValidationOcc . ' ';
+                $occIdentifications = $occ->getIdentifications();
+                if (null !== $occIdentifications) {
+                    foreach ($occIdentifications as $occIdentification) {
+                        $flatIdentificationOcc = $occIdentification->getRepository() . '~' . $occIdentification->getRepositoryIdTaxo();
+                        $flatIdentifications .= $flatIdentificationOcc . ' ';
                         // $i++;
                     }
                 }
@@ -173,48 +173,48 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
             // $i++;
         }
 
-        return $flatValidations;
+        return $flatIdentifications;
     }
 
-    private function getSyeOccurrencesValidations($syes): ?string
+    private function getSyeOccurrencesIdentifications($syes): ?string
     {
-        $flatValidations = '';
+        $flatIdentifications = '';
 
         if (null === $syes) return '';
 
         foreach ($syes as $sye) {
             $i = 0;
-            $flatValidation = $this->getOccurrencesValidations($sye->getOccurrences());
-            if ($i === 0) { $flatValidations = $flatValidation; } elseif ($i > 0) { $flatValidations = $flatValidations . ' ' . $flatValidation; }
+            $flatIdentification = $this->getOccurrencesIdentifications($sye->getOccurrences());
+            if ($i === 0) { $flatIdentifications = $flatIdentification; } elseif ($i > 0) { $flatIdentifications = $flatIdentifications . ' ' . $flatIdentification; }
             $i++;
         }
 
-        return $flatValidations;
+        return $flatIdentifications;
     }
 
-    private function getOccurrencesValidations($occurrences): ?string
+    private function getOccurrencesIdentifications($occurrences): ?string
     {
-        $flatValidations = '';
+        $flatIdentifications = '';
 
         if (null === $occurrences) return '';
 
         foreach ($occurrences as $occ) {
-            $occValidations = $occ->getValidations();
-            if (null !== $occValidations) {
-                foreach ($occValidations as $occValidation) {
+            $occIdentifications = $occ->getIdentifications();
+            if (null !== $occIdentifications) {
+                foreach ($occIdentifications as $occIdentification) {
                     $i = 0;
-                    $flatValidation = $occValidation->getRepository() . '~' . $occValidation->getRepositoryIdTaxo();
-                    $flatValidations .= $flatValidation . ' ';
+                    $flatIdentification = $occIdentification->getRepository() . '~' . $occIdentification->getRepositoryIdTaxo();
+                    $flatIdentifications .= $flatIdentification . ' ';
                     $i++;
                 }
             }
         }
 
-        return $flatValidations;
+        return $flatIdentifications;
     }
 
-    private function getRowsValidations($table): ?string {
-        $flatValidations = '';
+    private function getRowsIdentifications($table): ?string {
+        $flatIdentifications = '';
 
         if (null === $table) return '';
 
@@ -225,13 +225,13 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $i = 0;
         foreach ($tableRowDef as $rowDef) {
             if ('data' === $rowDef->getType()) {
-                $flatValidation = $rowDef->getRepository() . '~' . $rowDef->getRepositoryIdTaxo();
-                if ($i === 0) { $flatValidations = $flatValidation; } elseif ($i > 0) { $flatValidations = $flatValidations . ' ' . $flatValidation; }
+                $flatIdentification = $rowDef->getRepository() . '~' . $rowDef->getRepositoryIdTaxo();
+                if ($i === 0) { $flatIdentifications = $flatIdentification; } elseif ($i > 0) { $flatIdentifications = $flatIdentifications . ' ' . $flatIdentification; }
                 $i++;
             }
         }
 
-        return $flatValidations;
+        return $flatIdentifications;
     }
 
     private function getTablePreview($table): array
@@ -262,20 +262,20 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         return $rows;
     }
 
-    private function getValidations($_table) {
-        $validations = new stdClass();
+    private function getIdentifications($_table) {
+        $identifications = new stdClass();
 
         $tableId = $_table->getId();
-        $tableValidations = $_table->getValidations();
+        $tableIdentifications = $_table->getIdentifications();
 
         $table = new stdClass();
         $table->id = $tableId;
-        $table->validations = $tableValidations;
+        $table->identifications = $tableIdentifications;
 
         $syes = array();
         foreach ($_table->getSye() as $sye) {
             $syeId          = $sye->getId();
-            $syeValidations = $sye->getValidations();
+            $syeIdentifications = $sye->getIdentifications();
             $syeReleves     = $sye->getOccurrences();
 
             $releves = array();
@@ -283,22 +283,22 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
             foreach ($syeReleves as $syeReleve) {
                 $releve = new stdClass();
                 $releve->id = $syeReleve->getId();
-                $releve->validations = $syeReleve->getValidations();
+                $releve->identifications = $syeReleve->getIdentifications();
                 $releves[] = $releve;
             }
 
             $sye = new stdClass();
             $sye->id = $syeId;
-            $sye->validations = $syeValidations;
+            $sye->identifications = $syeIdentifications;
             $sye->releves = $releves;
 
             $syes[] = $sye;
         }
 
-        $validations->table = $table;
-        $validations->syes  = $syes;
+        $identifications->table = $table;
+        $identifications->syes  = $syes;
 
-        return $validations; // json_encode($validations);
+        return $identifications; // json_encode($identifications);
     }
 
     private function getOccurrencesCount($table): ?int {
@@ -333,15 +333,15 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $syes = $table->getSye();
         if (null === $syes) return [];
 
-        $v = array();
+        $ident = array();
         foreach ($syes as $sye) {
             $occurrences = $sye->getOccurrences();
             foreach ($occurrences as $occ) {
-                $validation = $occ->getValidations()[0];
-                if (null !== $validation) $v[] = $validation->getValidatedName();
+                $identification = $occ->getIdentifications()[0];
+                if (null !== $identification) $ident[] = $identification->getValidatedName();
             }
         }
 
-        return $v;
+        return $ident;
     }
 }
