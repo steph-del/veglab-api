@@ -44,7 +44,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         foreach($table->getIdentifications() as $identification) {
             $ident = array(
                 'id' => $identification->getId(),
-                'validatedAt' => $identification->getValidatedAt() ? $identification->getValidatedAt()->format('Y-m-d H:i:s') : null,
+                'createdAt' => $identification->getCreatedAt() ? $identification->getCreatedAt()->format('Y-m-d H:i:s') : null,
                 'owner' => $vlUser,
                 'updatedBy' => $identification->getUpdatedBy(),
                 'updatedAt' => $identification->getUpdatedAt() ? $identification->getUpdatedAt()->format('Y-m-d H:i:s') : null,

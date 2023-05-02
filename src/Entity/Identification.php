@@ -25,7 +25,7 @@ class Identification
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?\DateTimeInterface $validatedAt = null;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
@@ -90,14 +90,14 @@ class Identification
         return $this;
     }
 
-    public function getValidatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->validatedAt;
+        return $this->createdAt;
     }
 
-    public function setValidatedAt(?\DateTimeInterface $validatedAt): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
-        $this->validatedAt = $validatedAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
