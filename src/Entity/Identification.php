@@ -23,10 +23,6 @@ class Identification
     #[Groups(['occurrence::create'])]
     private ?Occurrence $occurrence = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
-    private ?string $validatedBy = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['table::read', 'table::create', 'occurrence::create'])]
     private ?\DateTimeInterface $validatedAt = null;
@@ -90,18 +86,6 @@ class Identification
     public function setOccurrence(?Occurrence $occurrence): self
     {
         $this->occurrence = $occurrence;
-
-        return $this;
-    }
-
-    public function getValidatedBy(): ?string
-    {
-        return $this->validatedBy;
-    }
-
-    public function setValidatedBy(?string $validatedBy): self
-    {
-        $this->validatedBy = $validatedBy;
 
         return $this;
     }

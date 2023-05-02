@@ -72,8 +72,6 @@ fos_elastica:
                 ###    properties:
                 ###        id:
                 ###            type: "long"
-                ###        validatedBy:
-                ###            type: "text"
                 ###        validatedAt:
                 ###            type: "date"
                 ###            format: 'yyyy-MM-dd HH:mm:ss'

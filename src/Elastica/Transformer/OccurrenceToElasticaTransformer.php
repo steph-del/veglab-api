@@ -56,7 +56,6 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
         foreach($occ->getIdentifications() as $identification) {
             $v = array(
                 'id' => $identification->getId(),
-                'validatedBy' => $identification->getValidatedBy(),
                 'validatedAt' => $identification->getValidatedAt() ? $identification->getValidatedAt()->format('Y-m-d H:i:s') : null,
                 'user' => $vlUser,
                 'updatedBy' => $identification->getUpdatedBy(),
