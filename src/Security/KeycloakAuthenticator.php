@@ -81,13 +81,38 @@ class KeycloakAuthenticator extends AbstractAuthenticator
             }
         }
 
-        $roles[] = 'ROLE_VEGLAB_USER'; // add a default role
+        if (false === array_search('ROLE_VEGLAB_USER', $roles)) {
+            $roles[] = 'ROLE_VEGLAB_USER'; // add a default role
+        }
+
+        $ssoUserEmail = array_key_exists('email', $decodedTokenAsArray) ? $decodedTokenAsArray['email'] : null;
+        $ssoFirstname = array_key_exists('given_name', $decodedTokenAsArray) ? $decodedTokenAsArray['given_name'] : null;
+        $ssoLastname = array_key_exists('family_name', $decodedTokenAsArray) ? $decodedTokenAsArray['family_name'] : null;
 
         $passport = new SelfValidatingPassport(
-            new UserBadge($decodedToken->sub, function (string $userId) {
+            new UserBadge($decodedToken->sub, function (string $userId) use ($ssoLastname, $ssoFirstname, $ssoUserEmail) {
                 $user = $this->userRepository->find($userId);
+
                 if (null === $user) {
                     $user = new User($userId);
+                    $user->setEmail($ssoUserEmail);
+                    $user->setFirstname($ssoFirstname);
+                    $user->setLastname($ssoLastname);
+                    $this->entityManager->persist($user);
+                    $this->entityManager->flush();
+
+                    return $user;
+                }
+
+                $userDataHasBeenUpdatedFromSso =
+                    $user->getEmail() !== $ssoUserEmail ||
+                    $user->getFirstName() !== $ssoFirstname ||
+                    $user->getLastName() !== $ssoLastname;
+
+                if ($userDataHasBeenUpdatedFromSso) {
+                    $user->setEmail($ssoUserEmail);
+                    $user->setFirstname($ssoFirstname);
+                    $user->setLastname($ssoLastname);
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
                 }
