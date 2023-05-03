@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,16 +14,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'vl_user')]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-)]
+#[ApiResource]
+#[Get(normalizationContext: ['groups' => ['user::read']])]
 class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
-    #[Groups(['read', 'table::create', 'occurrence::create'])]
+    #[Groups(['user::read', 'table::create', 'occurrence::create'])]
     private string $id;
 
+    #[ORM\Column(length: 255)]
+    #[Groups(['user::read'])]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user::read'])]
+    private ?string $lastname = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user::read'])]
+    private ?string $email = null;
+
+    #[Groups(['user::read'])]
     private array $roles;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Identification::class)]
@@ -64,7 +76,6 @@ class User implements UserInterface
 
     /**
      * @param string $id
-     *
      * @return User
      */
     public function setId(string $id): User
@@ -76,6 +87,7 @@ class User implements UserInterface
 
     /**
      * @param array $roles
+     * @return User
      */
     public function setRoles(array $roles): User
     {
@@ -98,7 +110,7 @@ class User implements UserInterface
     /**
      * @return void
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         return;
     }
@@ -261,29 +273,56 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getFirstName(): string
+    public function setEmail(string $email): self
     {
-        return '---';
-    }
+        $this->email = $email;
 
-    public function getLastName(): string
-    {
-        return '---';
-    }
-
-    public function getUsername(): string
-    {
-        return '---';
+        return $this;
     }
 
     public function getEmail(): string
     {
-        return '---';
+        return $this->email;
     }
 
-    public function getUserPseudo(): string
+    public function setFirstname(?string $firstname): self
     {
-        return '---';
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastname;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    #[Groups(['user::read'])]
+    public function getAcronym(): string
+    {
+        $words = preg_split("/\s+/", $this->getUsername());
+        $acronym = '';
+        foreach ($words as $word) {
+            $acronym .= substr($word, 0, 1);
+        }
+        return $acronym;
     }
 
 }

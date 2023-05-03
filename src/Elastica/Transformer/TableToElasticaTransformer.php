@@ -3,6 +3,8 @@
 namespace App\Elastica\Transformer;
 
 use App\Entity\Identification;
+use App\Entity\Table;
+use App\Entity\User;
 use Elastica\Document;
 use FOS\ElasticaBundle\Transformer\ModelToElasticaTransformerInterface;
 use stdClass;
@@ -24,18 +26,18 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         return new Document($table->getId(), $this->buildData($table));
     }
 
-    protected function buildData($table): array
+    protected function buildData(Table $table): array
     {
         $data = [];
         $tableIdentifications = [];
 
         // VL USER
         $u = $table->getOwner();
+        /** @var $vlUser User */
         $vlUser = (object)array(
             'id' => $u->getId(),
             'firstName' => $u->getFirstName(),
             'lastName' => $u->getLastName(),
-            'username' => $u->getUsername(),
             'email' => $u->getEmail()
         );
 
@@ -73,7 +75,7 @@ class TableToElasticaTransformer implements ModelToElasticaTransformerInterface
         $data['pdfContentUrl']    = (null !== $table->getPdf()) ? $table->getPdf()->getContentUrl() : null;
 
         $data['userId']           = $u->getId();
-        $date['userPseudo']       = $u->getUserPseudo();
+        $date['userPseudo']       = $u->getAcronym();
         $data['user']             = $vlUser;
 
         $data['createdBy']        = $table->getCreatedBy();

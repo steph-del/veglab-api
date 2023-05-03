@@ -3,6 +3,7 @@
 namespace App\Elastica\Transformer;
 
 use App\Entity\Occurrence;
+use App\Entity\User;
 use Elastica\Document;
 use FOS\ElasticaBundle\Transformer\ModelToElasticaTransformerInterface;
 
@@ -36,12 +37,12 @@ class OccurrenceToElasticaTransformer implements ModelToElasticaTransformerInter
 
         // VL USER
         $u = $occ->getOwner();
+        /** @var $vlUser User */
         $vlUser = (object)array(
             'id' => $u->getId(),
-            //'firstName' => $u->getFirstName(),
-            //'lastName' => $u->getLastName(),
-            //'username' => $u->getUsername(),
-            //'email' => $u->getEmail()
+            'firstName' => $u->getFirstName(),
+            'lastName' => $u->getLastName(),
+            'email' => $u->getEmail()
         );
 
         // VL Identification
