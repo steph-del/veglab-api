@@ -53,7 +53,7 @@ class Sye
     private ?string $occurrencesOrder = null;
 
     #[ORM\OneToOne(inversedBy: 'sye', cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[ORM\JoinColumn(name: 'sye_synth_col', referencedColumnName: 'id', nullable: false)]
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\Column(nullable: true)]

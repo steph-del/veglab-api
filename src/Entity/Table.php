@@ -47,7 +47,7 @@ class Table
     private Collection $sye;
 
     #[ORM\OneToOne(inversedBy: 'table', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:'table_synth_col', nullable: false)]
     #[Groups(['table::read', 'table::create'])]
     private ?SyntheticColumn $syntheticColumn = null;
 
