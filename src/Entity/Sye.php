@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\SyeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,64 +12,67 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SyeRepository::class)]
 #[ApiResource]
+#[Get(normalizationContext: ['groups' => 'sye::read'])]
 class Sye
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'syes')]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\OneToMany(mappedBy: 'sye', targetEntity: ExtendedFieldOccurrence::class)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\ManyToMany(targetEntity: Occurrence::class, mappedBy: 'syes')]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private Collection $occurrences;
 
     #[ORM\OneToMany(mappedBy: 'sye', targetEntity: Identification::class)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private Collection $identifications;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?int $syePosition = null;
 
     #[ORM\ManyToOne(inversedBy: 'sye')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?User $owner = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?int $occurrenceCount = null;
 
     #[ORM\Column(length: 1024, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?string $occurrencesOrder = null;
 
     #[ORM\OneToOne(inversedBy: 'sye', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'sye_synth_col', referencedColumnName: 'id', nullable: false)]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?bool $syntheticSye = null;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?bool $onlyShowSyntheticColumn = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?string $vlWorkspace = null;
 
     #[ORM\ManyToOne(inversedBy: 'sye')]
+    #[ORM\JoinColumn(name: 'table_id', referencedColumnName: 'id')]
     private ?Table $_table = null;
 
     public function __construct()

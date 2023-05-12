@@ -3,21 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\SyntheticColumnRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: SyntheticColumnRepository::class)]
 #[ApiResource]
+#[Get]
 class SyntheticColumn
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumns')]
@@ -32,7 +33,7 @@ class SyntheticColumn
     #[Groups(['table::read', 'table::create'])]
     private Collection $identifications;
 
-    #[ORM\OneToOne(mappedBy: 'syntheticColumn', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'syntheticColumn')]
     private ?Sye $sye = null;
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumn')]
@@ -44,7 +45,7 @@ class SyntheticColumn
     private ?Table $table = null;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: SyntheticItem::class, cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create'])]
     private Collection $items;
 
     #[ORM\Column(length: 255, nullable: true)]

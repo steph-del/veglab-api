@@ -20,7 +20,7 @@ class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
-    #[Groups(['user::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['user::read', 'occurrence::read', 'table::read', 'table::create', 'occurrence::create'])]
     private string $id;
 
     #[ORM\Column(length: 255)]

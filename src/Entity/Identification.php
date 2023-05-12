@@ -16,7 +16,7 @@ class Identification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'identifications')]
@@ -24,44 +24,44 @@ class Identification
     private ?Occurrence $occurrence = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $updatedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'identification')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?User $owner = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $repository = null;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?int $repositoryIdNomen = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $repositoryIdTaxo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $citationName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $nomenclaturalName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $taxonomicalName = null;
 
     #[ORM\ManyToOne(inversedBy: 'identifications')]

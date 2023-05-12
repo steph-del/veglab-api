@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
@@ -11,182 +12,185 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: OccurrenceRepository::class)]
 #[ApiResource]
-#[Get]
+#[Get(normalizationContext: ['groups' => 'occurrence::read'])]
 #[Post(denormalizationContext: ['groups' => ['occurrence::create']])]
 class Occurrence
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['occurrence::read', 'sye::read', 'table::read', 'table::create'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $level = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(nullable: true)]
+    #[MaxDepth(2)]
     // https://api-platform.com/docs/core/serialization/#force-iri-with-relations-of-the-same-type-parentchilds-relations
     private ?self $parent = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
+    #[MaxDepth(2)]
     private Collection $children;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $parentLevel = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $layer = null;
 
     #[ORM\ManyToMany(targetEntity: Observer::class, mappedBy: 'occurrences', cascade: ["persist"])]
     #[ORM\JoinTable(name: "vl_occurrence__observer")]
     #[ORM\JoinColumn(name: "vl_observer_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private Collection $vlObservers;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $vlWorkspace = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $dateObserved = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $dateObservedPrecision = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $dateCreated = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $dateUpdated = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?\DateTimeInterface $datePublished = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create','occurrence::create'])]
+    #[Groups(['occurrence::read', 'sye::read', 'table::read', 'table::create','occurrence::create'])]
     private ?string $certainty = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $annotation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $occurrenceType = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $coef = null;
 
     #[ORM\ManyToOne(inversedBy: 'occurrences')]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?bool $isPublic = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $signature = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $geometry = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $centroid = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?int $elevation = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?bool $isElevationEstimated = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $geodatum = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $locality = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $localityInseeCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'table::read', 'table::create'])]
     private ?string $publishedLocation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $vlLocationAccuracy = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups([ 'occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmCounty = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmState = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmPostCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmCountry = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmCountryCode = null;
 
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?string $osmId = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?int $osmPlaceId = null;
 
     #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: Identification::class, cascade: ["persist"])]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private Collection $identifications;
 
     #[ORM\OneToMany(mappedBy: 'occurrence', targetEntity: ExtendedFieldOccurrence::class)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\ManyToMany(targetEntity: Sye::class, inversedBy: 'occurrences')]
     private Collection $syes;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     #[SerializedName("userId")]
     private ?string $userId = null;
 
     #[ORM\ManyToOne(inversedBy: 'occurrences')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['table::read', 'table::create', 'occurrence::create'])]
+    #[Groups(['occurrence::read', 'occurrence::create', 'sye::read', 'table::read', 'table::create'])]
     private ?User $owner = null;
 
     public function __construct()
@@ -208,6 +212,11 @@ class Occurrence
      */
     public function getVlObservers(): Collection
     {
+        // Minimize the number of SQL requests generated by Doctrine
+        // (I don't care to know the owner of an idiotaxon -> it is the owner of the parent occurrence)
+        if ('idiotaxon' === $this->getLevel()) {
+            return new ArrayCollection([]);
+        }
         return $this->vlObservers;
     }
 
@@ -271,6 +280,10 @@ class Occurrence
      */
     public function getChildren(): Collection
     {
+        // Minimize the number of SQL requests generated by Doctrine
+        if ($this->getLevel() === 'idiotaxon') {
+            return new ArrayCollection([]);
+        }
         return $this->children;
     }
 
@@ -703,6 +716,11 @@ class Occurrence
      */
     public function getExtendedFieldOccurrences(): Collection
     {
+        // Minimize the number of SQL requests generated by Doctrine
+        // (idiotaxon have no related extended fields for now)
+        if ('idiotaxon' === $this->getLevel()) {
+            return new ArrayCollection([]);
+        }
         return $this->extendedFieldOccurrences;
     }
 

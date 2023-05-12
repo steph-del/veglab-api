@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,13 +11,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: TableRepository::class)]
 #[ORM\Table(name: 'vl_table')]
-#[ApiResource(
-    normalizationContext: ['groups' => ['table::read']],
-)]
+#[ApiResource]
+#[Get(normalizationContext: ['groups' => ['table::read']])]
 #[Post(denormalizationContext: ['groups' => ['table::create']])]
 class Table
 {
