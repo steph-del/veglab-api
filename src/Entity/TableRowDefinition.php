@@ -14,43 +14,43 @@ class TableRowDefinition
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $rowId = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $type = null;
 
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $groupId = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $groupTitle = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $layer = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $displayName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $repository = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $repositoryIdNomen = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $repositoryIdTaxo = null;
 
     #[ORM\ManyToOne(inversedBy: 'rowsDefinition')]

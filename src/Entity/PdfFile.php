@@ -16,36 +16,36 @@ class PdfFile
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'pdfFiles')]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\Column(length: 190)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $originalName = null;
 
     #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "contentUrl", mimeType: "mimeType", originalName: "originalName")]
     private ?string $file = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $contentUrl = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $mimeType = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $url = null;
 
     #[ORM\OneToOne(inversedBy: 'pdf', cascade: ['persist', 'remove'])]
     private ?Table $_table = null;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int

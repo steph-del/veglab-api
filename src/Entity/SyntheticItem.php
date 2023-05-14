@@ -14,7 +14,7 @@ class SyntheticItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
@@ -22,47 +22,47 @@ class SyntheticItem
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $layer = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $repository = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?int $repositoryIdNomen = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $repositoryIdTaxo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $displayName = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?int $occurrenceCount = null;
 
     #[ORM\Column]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?bool $isOccurrenceCountEstimated = null;
 
     #[ORM\Column]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?float $frequency = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $coef = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $minCoef = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?string $maxCoef = null;
 
     public function getId(): ?int

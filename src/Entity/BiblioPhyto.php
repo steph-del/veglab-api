@@ -17,11 +17,11 @@ class BiblioPhyto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'vlBiblioSource', targetEntity: Occurrence::class)]

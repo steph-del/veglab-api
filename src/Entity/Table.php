@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource]
 #[Get(normalizationContext: ['groups' => ['table::read']])]
 #[Post(denormalizationContext: ['groups' => ['table::create']])]
+#[Put(denormalizationContext: ['groups' => 'table::update'])]
 class Table
 {
     #[ORM\Id]
@@ -26,28 +28,29 @@ class Table
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: '_table', targetEntity: TableRowDefinition::class, cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private Collection $rowsDefinition;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create',
+        'table::update'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\OneToMany(mappedBy: '_table', targetEntity: Identification::class, cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private Collection $identifications;
 
     #[ORM\OneToOne(mappedBy: '_table', cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?PdfFile $pdf = null;
 
     #[ORM\OneToMany(mappedBy: '_table', targetEntity: Sye::class, cascade: ['persist', 'remove'])]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private Collection $sye;
 
     #[ORM\OneToOne(inversedBy: 'table', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name:'table_synth_col', nullable: false)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?SyntheticColumn $syntheticColumn = null;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
@@ -68,27 +71,27 @@ class Table
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?int $updatedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 1024, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $syeOrder = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 300, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $vlWorkspace = null;
 
     public function __construct()

@@ -18,19 +18,19 @@ class SyntheticColumn
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumns')]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?BiblioPhyto $vlBiblioSource = null;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: ExtendedFieldOccurrence::class)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private Collection $extendedFieldOccurrences;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: Identification::class)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private Collection $identifications;
 
     #[ORM\OneToOne(mappedBy: 'syntheticColumn')]
@@ -38,18 +38,18 @@ class SyntheticColumn
 
     #[ORM\ManyToOne(inversedBy: 'syntheticColumn')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?User $owner = null;
 
     #[ORM\OneToOne(mappedBy: 'syntheticColumn')]
     private ?Table $table = null;
 
     #[ORM\OneToMany(mappedBy: 'syntheticColumn', targetEntity: SyntheticItem::class, cascade: ['persist', 'remove'])]
-    #[Groups(['sye::read', 'table::read', 'table::create'])]
+    #[Groups(['sye::read', 'table::read', 'table::create', 'table::update'])]
     private Collection $items;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['table::read', 'table::create'])]
+    #[Groups(['table::read', 'table::create', 'table::update'])]
     private ?string $vlWorkspace = null;
 
     public function __construct()
